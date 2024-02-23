@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Crypto(
     @SerializedName("CoinInfo")
-     val coin: Coin? = null,
+    val coin: Coin? = null,
     @SerializedName("DISPLAY")
-     val display: DisplayCoin? = null,
+    val display: DisplayCoin? = null,
 )
