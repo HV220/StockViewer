@@ -19,7 +19,7 @@ class CoinsViewModel : ViewModel() {
     companion object {
         const val URL: String = "https://min-api.cryptocompare.com/"
         const val RATE: String = "USD"
-        const val LIMIT_ELEMENTS: Int = 10
+        const val LIMIT_ELEMENTS: Int = 50
     }
 
     private var page = 1
@@ -40,9 +40,9 @@ class CoinsViewModel : ViewModel() {
         return isInfoCoinsLoading
     }
 
-    private fun loadInfoAboutCoins() {
-
+    public fun loadInfoAboutCoins() {
         error.value = false
+
         val disposable: Disposable = ApiFactory.getApiService<TopList24hVolumeService>(
                 URL, RetrofitDefaultConfigurator()
             ).loadTop24Crypto(
@@ -62,7 +62,7 @@ class CoinsViewModel : ViewModel() {
         compositeDisposable.add(disposable)
     }
 
-    private fun convertTimestampToDateTime(timestamp: Long): String {
+     fun convertTimestampToDateTime(timestamp: Long): String {
         val instant = Instant.ofEpochSecond(timestamp)
         val formatter =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault())

@@ -3,33 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_centerHorizontal="true"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/buttonStart"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/coinsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Start" />
-
-    <Button
-        android:id="@+id/buttonStop"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Stop" />
-
-    <Button
-        android:id="@+id/buttonReset"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Reset" />
-
-    <TextView
-        android:id="@+id/welcome"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="@android:color/holo_red_light"
-        android:textSize="44sp"
-        tools:text="test" />
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        tools:listitem="@layout/item_coins"
+        >
+    </androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>

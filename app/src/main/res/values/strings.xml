@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">StockViewer</string>
+    <string name="picture_of_coin">Picture of Coin</string>
 </resources>
