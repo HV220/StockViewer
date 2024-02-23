@@ -53,6 +53,7 @@ class MainActivity : ComponentActivity() {
         var test = CryptoResponse()
     }
 
+
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(runnable) // Убедитесь, что остановили таймер
