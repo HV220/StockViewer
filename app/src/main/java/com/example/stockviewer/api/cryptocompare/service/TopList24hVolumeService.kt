@@ -9,6 +9,7 @@ interface TopList24hVolumeService {
     @GET("data/top/totalvolfull")
     fun loadTop24Crypto(
         @Query("limit") limit: Int,
+        @Query("page") page: Int,
         @Query("tsym") tsym: String
     ): Single<CryptoResponse>
 }
