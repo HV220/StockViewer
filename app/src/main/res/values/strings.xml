@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">StockViewer</string>
     <string name="picture_of_coin">Picture of Coin</string>
+    <string name="descriptionCoinNotExist">Our system doesn\'t have information about that coin.</string>
 </resources>

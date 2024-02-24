@@ -7,4 +7,6 @@ data class Crypto(
     val coin: Coin? = null,
     @SerializedName("DISPLAY")
     val display: DisplayCoin? = null,
+    @SerializedName("RAW")
+    val raw: Raw? = null
 )
