@@ -63,6 +63,7 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.databinding:databinding-runtime:8.2.2")
 
     val room_version = "2.6.1"
 

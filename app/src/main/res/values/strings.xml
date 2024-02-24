@@ -5,4 +5,8 @@
     </string>
     <string name="internal_error_please_check_your_internet_connection_or_reload_application">
         Internal error. Please check your internet connection or reload application.</string>
+    <string name="price">"price: "</string>
+    <string name="low_price_of_day">"low price of day: "</string>
+    <string name="high_price_of_day">"high price of day: "</string>
+    <string name="last_buy_of_day">"last buy of day: "</string>
 </resources>

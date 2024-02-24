@@ -1,6 +1,5 @@
 package com.example.stockviewer.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -62,7 +61,6 @@ class CoinsViewModel : ViewModel() {
             .doOnSubscribe { isInfoCoinsLoading.value = true }
             .doAfterTerminate { isInfoCoinsLoading.value = false }
             .subscribe({ successResult ->
-                Log.d("MainActivity", successResult.cryptos.toString())
                 val currentData = cryptosData
                     .value?.toMutableList() ?: mutableListOf()
 

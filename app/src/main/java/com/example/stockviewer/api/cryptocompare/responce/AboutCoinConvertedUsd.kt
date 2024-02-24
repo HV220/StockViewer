@@ -10,7 +10,7 @@ data class AboutCoinConvertedUsd(
     @SerializedName("LOWDAY")
     val lowDay: String? = null,
     @SerializedName("HIGHDAY")
-    val HighDay: String? = null,
+    val highDay: String? = null,
     @SerializedName("LASTMARKET")
     val lastBuy: String? = null,
 ) : Serializable
