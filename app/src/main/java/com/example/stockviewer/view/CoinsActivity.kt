@@ -1,9 +1,12 @@
 package com.example.stockviewer.view
 
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.stockviewer.R
 import com.example.stockviewer.adapter.cryptocompare.CoinAdapter
 import com.example.stockviewer.databinding.ActivityMainBinding
 import com.example.stockviewer.viewmodel.CoinsViewModel
@@ -33,16 +36,31 @@ class CoinsActivity : ComponentActivity() {
         coinsViewModel.loadInfoAboutCoins()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
     private fun initOnClickViewModel() {
         coinsViewModel.let {
             it.getInfoAboutCoins().observe(this) { result ->
                 adapter.dataCoins = result
             }
         }
+        coinsViewModel.getInfoCoinsLoading().observe(this) { isLoading ->
+            if (isLoading) {
+                binding.progress.visibility = View.VISIBLE
+            } else {
+                binding.progress.visibility = View.GONE
+            }
+        }
+        coinsViewModel.getError()
+            .observe(this) { isError ->
+                if (isError)
+                    Toast.makeText(
+                        this,
+                        getString(
+                            R.string.
+                            internal_error_please_check_your_internet_connection_or_reload_application
+                        ),
+                        Toast.LENGTH_LONG
+                    ).show()
+            }
     }
 
     private fun initOnClickAdapter() {
@@ -51,5 +69,11 @@ class CoinsActivity : ComponentActivity() {
                 coinsViewModel.loadInfoAboutCoins()
             }
         }
+        adapter.onContextNoInformationListener =
+            object : CoinAdapter.OnContextNoInformationListener {
+                override fun setContextErrorForUser(): String {
+                    return resources.getString(R.string.descriptionCoinNotExist)
+                }
+            }
     }
 }

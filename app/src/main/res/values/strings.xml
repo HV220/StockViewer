@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">StockViewer</string>
     <string name="picture_of_coin">Picture of Coin</string>
-    <string name="descriptionCoinNotExist">Our system doesn\'t have information about that coin.</string>
+    <string name="descriptionCoinNotExist">Our system doesn\'t have information about that coin.
+    </string>
+    <string name="internal_error_please_check_your_internet_connection_or_reload_application">
+        Internal error. Please check your internet connection or reload application.</string>
 </resources>
