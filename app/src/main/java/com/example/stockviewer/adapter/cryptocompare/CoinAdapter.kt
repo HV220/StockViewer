@@ -14,7 +14,13 @@ import com.example.stockviewer.api.cryptocompare.responce.Crypto
 class CoinAdapter(
 
 ) : Adapter<CoinAdapter.CoinViewHolder>() {
-    private var dataCoins = ArrayList<Crypto>()
+    var dataCoins : List<Crypto> = ArrayList()
+        set(value) {
+           notifyDataSetChanged()
+            field = value
+        }
+
+    var onReachEndListener: OnReachEndListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CoinViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -32,6 +38,12 @@ class CoinAdapter(
         holder.coinPrice?.text = coin.display?.rate?.price
         holder.coinRateName?.text =
             String.format("%s/%s", coin.coin?.name, coin.display?.rate?.nameRate)
+
+        if (dataCoins.size - 10 == position) onReachEndListener?.doOnReachEnd()
+    }
+
+    interface OnReachEndListener {
+        fun doOnReachEnd()
     }
 
     class CoinViewHolder(
