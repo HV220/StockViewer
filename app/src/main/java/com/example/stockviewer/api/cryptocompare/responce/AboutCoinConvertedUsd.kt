@@ -1,6 +1,7 @@
 package com.example.stockviewer.api.cryptocompare.responce
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class AboutCoinConvertedUsd(
     val nameRate: String = "USD",
@@ -12,4 +13,4 @@ data class AboutCoinConvertedUsd(
     val HighDay: String? = null,
     @SerializedName("LASTMARKET")
     val lastBuy: String? = null,
-)
+) : Serializable

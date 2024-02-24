@@ -23,6 +23,7 @@ class CoinAdapter(
 
     var onReachEndListener: OnReachEndListener? = null
     var onContextNoInformationListener: OnContextNoInformationListener? = null
+    var onSetClickCoinListener: OnSetClickCoinListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CoinViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -48,12 +49,18 @@ class CoinAdapter(
                 .resize(40, 40)
                 .centerCrop()
                 .into(holder.coinImage)
+
+            holder.itemView.setOnClickListener {
+                onSetClickCoinListener?.setClickCoin(coin)
+            }
         } else {
             holder.coinRateName?.text =
                 String.format("%s", onContextNoInformationListener?.setContextErrorForUser())
         }
 
         if (dataCoins.size - 10 == position) onReachEndListener?.doOnReachEnd()
+
+
     }
 
     interface OnReachEndListener {
@@ -62,6 +69,10 @@ class CoinAdapter(
 
     interface OnContextNoInformationListener {
         fun setContextErrorForUser(): String
+    }
+
+    interface OnSetClickCoinListener {
+        fun setClickCoin(coin: Crypto)
     }
 
     class CoinViewHolder(

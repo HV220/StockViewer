@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.stockviewer.R
 import com.example.stockviewer.adapter.cryptocompare.CoinAdapter
+import com.example.stockviewer.api.cryptocompare.responce.Crypto
 import com.example.stockviewer.databinding.ActivityMainBinding
 import com.example.stockviewer.viewmodel.CoinsViewModel
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -55,8 +56,7 @@ class CoinsActivity : ComponentActivity() {
                     Toast.makeText(
                         this,
                         getString(
-                            R.string.
-                            internal_error_please_check_your_internet_connection_or_reload_application
+                            R.string.internal_error_please_check_your_internet_connection_or_reload_application
                         ),
                         Toast.LENGTH_LONG
                     ).show()
@@ -75,5 +75,12 @@ class CoinsActivity : ComponentActivity() {
                     return resources.getString(R.string.descriptionCoinNotExist)
                 }
             }
+        adapter.onSetClickCoinListener = object : CoinAdapter.OnSetClickCoinListener {
+            override fun setClickCoin(coin: Crypto) {
+                val intent =
+                    CoinDetailedActivity.createIntent(this@CoinsActivity, coin)
+                startActivity(intent)
+            }
+        }
     }
 }
