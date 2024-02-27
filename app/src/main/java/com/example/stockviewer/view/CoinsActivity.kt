@@ -11,6 +11,7 @@ import com.example.stockviewer.adapter.cryptocompare.CoinAdapter
 import com.example.stockviewer.api.cryptocompare.responce.Crypto
 import com.example.stockviewer.databinding.ActivityMainBinding
 import com.example.stockviewer.viewmodel.CoinsViewModel
+import com.example.stockviewer.viewmodel.CoinsViewModelFactory
 import com.jakewharton.threetenabp.AndroidThreeTen
 
 
@@ -25,7 +26,9 @@ class CoinsActivity : ComponentActivity() {
         setContentView(binding.root)
         AndroidThreeTen.init(this)
 
-        coinsViewModel = ViewModelProvider(this)[CoinsViewModel::class.java]
+        coinsViewModel =
+            ViewModelProvider(this, CoinsViewModelFactory(application))[CoinsViewModel::class.java]
+
         adapter = CoinAdapter()
 
         initOnClickViewModel()
