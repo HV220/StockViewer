@@ -1,6 +1,10 @@
 package com.example.stockviewer.viewmodel
 
 import android.app.Application
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkRequest
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,6 +16,7 @@ import com.example.stockviewer.api.cryptocompare.responce.Coin
 import com.example.stockviewer.api.cryptocompare.responce.CoinInfo
 import com.example.stockviewer.api.cryptocompare.responce.Crypto
 import com.example.stockviewer.api.cryptocompare.service.TopList24hVolumeService
+import com.example.stockviewer.db.cryptocompare.stuctures.CryptoDao
 import com.example.stockviewer.db.cryptocompare.stuctures.CryptoDatabase
 import com.google.gson.GsonBuilder
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -20,8 +25,9 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class CoinsViewModel(
-    application: Application,
-    private val db: CryptoDatabase? = CryptoDatabase.getInstance(application)
+    private val application: Application,
+    private val db: CryptoDao = CryptoDatabase.getInstance(application).cryptoDao()
+
 ) : AndroidViewModel(application) {
     companion object {
         const val URL: String = "https://min-api.cryptocompare.com/"
@@ -30,18 +36,19 @@ class CoinsViewModel(
     }
 
     private var page = 0
-    private val cryptosData = MutableLiveData<List<Crypto>>()
     private val isInfoCoinsLoading = MutableLiveData(false)
-    private val error = MutableLiveData(false)
+    private val errorGetDataApi = MutableLiveData(false)
+    private val isNetworkAvailable = MutableLiveData(false)
+
     private val compositeDisposable = CompositeDisposable()
 
 
     fun getInfoAboutCoins(): LiveData<List<Crypto>> {
-        return cryptosData
+        return db.getAllCryptos()
     }
 
     fun getError(): LiveData<Boolean> {
-        return error
+        return errorGetDataApi
     }
 
     fun getInfoCoinsLoading(): LiveData<Boolean> {
@@ -49,7 +56,12 @@ class CoinsViewModel(
     }
 
     fun loadInfoAboutCoins() {
-        error.value = false
+        registerNetworkCallback(application)
+
+        if (isNetworkAvailable.value == false) return
+
+        errorGetDataApi.value = false
+
         val gson = GsonBuilder()
             .registerTypeAdapter(CoinInfo::class.java, CoinInfoDeserializer())
             .registerTypeAdapter(Coin::class.java, CoinDeserializer())
@@ -67,24 +79,43 @@ class CoinsViewModel(
             .doOnSubscribe { isInfoCoinsLoading.value = true }
             .doAfterTerminate { isInfoCoinsLoading.value = false }
             .subscribe({ successResult ->
-                val currentData = cryptosData
-                    .value?.toMutableList() ?: mutableListOf()
 
                 successResult
                     .cryptos?.let { newList ->
-                        currentData.addAll(newList)
+                        val disposable: Disposable =
+                            db.insertAllCryptos(newList).subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .doOnSubscribe { isInfoCoinsLoading.value = true }
+                                .doAfterTerminate { isInfoCoinsLoading.value = false }
+                                .subscribe()
+                        compositeDisposable.add(disposable)
                     }
-
-                cryptosData.postValue(currentData)
 
                 page++
 
-            }, { error.postValue(true) }
+            }, { errorGetDataApi.postValue(true) }
 
             )
         compositeDisposable.add(disposable)
     }
 
+    fun registerNetworkCallback(context: Context) {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val request = NetworkRequest.Builder().build()
+
+        connectivityManager.registerNetworkCallback(
+            request,
+            object : ConnectivityManager.NetworkCallback() {
+                override fun onAvailable(network: Network) {
+                    isNetworkAvailable.postValue(true)
+                }
+
+                override fun onLost(network: Network) {
+                    isNetworkAvailable.postValue(false)
+                }
+            })
+    }
 
     override fun onCleared() {
         super.onCleared()

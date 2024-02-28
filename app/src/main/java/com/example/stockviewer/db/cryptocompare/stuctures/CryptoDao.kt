@@ -6,6 +6,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.stockviewer.api.cryptocompare.responce.Crypto
+import io.reactivex.rxjava3.core.Completable
 
 @Dao
 interface CryptoDao {
@@ -13,8 +14,8 @@ interface CryptoDao {
     fun getAllCryptos(): LiveData<List<Crypto>>
 
     @Insert
-    fun insertCrypto(crypto: Crypto)
+    fun insertAllCryptos(cryptos: List<Crypto>) : Completable
 
     @Delete
-    fun deleteCrypto(crypto: Crypto)
+    fun deleteCrypto(crypto: Crypto) : Completable
 }
