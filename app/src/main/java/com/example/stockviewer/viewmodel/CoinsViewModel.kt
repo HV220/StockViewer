@@ -55,6 +55,10 @@ class CoinsViewModel(
         return isInfoCoinsLoading
     }
 
+    fun getNetworkAvailable(): LiveData<Boolean> {
+        return isNetworkAvailable
+    }
+
     fun loadInfoAboutCoins() {
         registerNetworkCallback(application)
 
@@ -99,7 +103,7 @@ class CoinsViewModel(
         compositeDisposable.add(disposable)
     }
 
-    fun registerNetworkCallback(context: Context) {
+    private fun registerNetworkCallback(context: Context) {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val request = NetworkRequest.Builder().build()

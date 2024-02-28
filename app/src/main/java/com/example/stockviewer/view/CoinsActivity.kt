@@ -27,7 +27,9 @@ class CoinsActivity : ComponentActivity() {
         AndroidThreeTen.init(this)
 
         coinsViewModel =
-            ViewModelProvider(this, CoinsViewModelFactory(application))[CoinsViewModel::class.java]
+            ViewModelProvider(
+                this, CoinsViewModelFactory(application)
+            )[CoinsViewModel::class.java]
 
         adapter = CoinAdapter()
 
@@ -59,11 +61,23 @@ class CoinsActivity : ComponentActivity() {
                     Toast.makeText(
                         this,
                         getString(
-                            R.string.internal_error_please_check_your_internet_connection_or_reload_application
+                            R.string.internal_error
                         ),
                         Toast.LENGTH_LONG
                     ).show()
             }
+
+        coinsViewModel.getNetworkAvailable().observe(this) { isNetworkConnect ->
+            if (!isNetworkConnect) {
+                binding.networkConnection.visibility = View.VISIBLE
+                binding.networkConnection.text = getString(
+                    R.string.no_network_connect
+                )
+            } else {
+                binding.networkConnection.visibility = View.GONE
+
+            }
+        }
     }
 
     private fun initOnClickAdapter() {
