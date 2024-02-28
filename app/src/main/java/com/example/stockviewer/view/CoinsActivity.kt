@@ -38,8 +38,6 @@ class CoinsActivity : ComponentActivity() {
 
         binding.coinsRecyclerView.layoutManager = GridLayoutManager(this, 1)
         binding.coinsRecyclerView.adapter = adapter
-
-        coinsViewModel.loadInfoAboutCoins()
     }
 
     private fun initOnClickViewModel() {
@@ -48,6 +46,7 @@ class CoinsActivity : ComponentActivity() {
                 adapter.dataCoins = result
             }
         }
+
         coinsViewModel.getInfoCoinsLoading().observe(this) { isLoading ->
             if (isLoading) {
                 binding.progress.visibility = View.VISIBLE
@@ -55,6 +54,7 @@ class CoinsActivity : ComponentActivity() {
                 binding.progress.visibility = View.GONE
             }
         }
+
         coinsViewModel.getError()
             .observe(this) { isError ->
                 if (isError)
@@ -75,7 +75,8 @@ class CoinsActivity : ComponentActivity() {
                 )
             } else {
                 binding.networkConnection.visibility = View.GONE
-
+                coinsViewModel.deleteAllDataDb()
+                coinsViewModel.loadInfoAboutCoins()
             }
         }
     }
@@ -99,5 +100,10 @@ class CoinsActivity : ComponentActivity() {
                 startActivity(intent)
             }
         }
+    }
+
+    override fun onResume() {
+        coinsViewModel.registerNetworkCallback(application)
+        super.onResume()
     }
 }

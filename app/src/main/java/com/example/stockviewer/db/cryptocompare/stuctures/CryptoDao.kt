@@ -18,4 +18,7 @@ interface CryptoDao {
 
     @Delete
     fun deleteCrypto(crypto: Crypto) : Completable
+
+    @Query("DELETE FROM cryptos")
+    fun deleteAllCryptos() : Completable
 }

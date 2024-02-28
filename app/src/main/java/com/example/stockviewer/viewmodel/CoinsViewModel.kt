@@ -32,7 +32,7 @@ class CoinsViewModel(
     companion object {
         const val URL: String = "https://min-api.cryptocompare.com/"
         const val RATE: String = "USD"
-        const val LIMIT_ELEMENTS: Int = 50
+        const val LIMIT_ELEMENTS: Int = 20
     }
 
     private var page = 0
@@ -60,11 +60,9 @@ class CoinsViewModel(
     }
 
     fun loadInfoAboutCoins() {
-        registerNetworkCallback(application)
+        errorGetDataApi.value = false
 
         if (isNetworkAvailable.value == false) return
-
-        errorGetDataApi.value = false
 
         val gson = GsonBuilder()
             .registerTypeAdapter(CoinInfo::class.java, CoinInfoDeserializer())
@@ -86,24 +84,21 @@ class CoinsViewModel(
 
                 successResult
                     .cryptos?.let { newList ->
-                        val disposable: Disposable =
-                            db.insertAllCryptos(newList).subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .doOnSubscribe { isInfoCoinsLoading.value = true }
-                                .doAfterTerminate { isInfoCoinsLoading.value = false }
-                                .subscribe()
-                        compositeDisposable.add(disposable)
+                        insertDataDb(newList)
+
+                        page++
                     }
-
-                page++
-
-            }, { errorGetDataApi.postValue(true) }
+            }, {
+                errorGetDataApi.postValue(true)
+                page = 0
+            }
 
             )
         compositeDisposable.add(disposable)
     }
 
-    private fun registerNetworkCallback(context: Context) {
+    fun registerNetworkCallback(context: Context) {
+
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val request = NetworkRequest.Builder().build()
@@ -112,13 +107,33 @@ class CoinsViewModel(
             request,
             object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
+                    page = 0
                     isNetworkAvailable.postValue(true)
                 }
 
                 override fun onLost(network: Network) {
+                    page = 0
                     isNetworkAvailable.postValue(false)
                 }
             })
+    }
+
+    fun deleteAllDataDb() {
+        val deleteDisposable = db.deleteAllCryptos()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe()
+        compositeDisposable.add(deleteDisposable)
+    }
+
+    private fun insertDataDb(data: List<Crypto>) {
+        val insertDisposable: Disposable =
+            db.insertAllCryptos(data).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { isInfoCoinsLoading.value = true }
+                .doAfterTerminate { isInfoCoinsLoading.value = false }
+                .subscribe()
+        compositeDisposable.add(insertDisposable)
     }
 
     override fun onCleared() {
