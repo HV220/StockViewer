@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -26,16 +27,16 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 
 class CoinsViewModel(
     private val application: Application,
-    private val db: CryptoDao = CryptoDatabase.getInstance(application).cryptoDao()
 
-) : AndroidViewModel(application) {
+    ) : AndroidViewModel(application) {
     companion object {
         const val URL: String = "https://min-api.cryptocompare.com/"
         const val RATE: String = "USD"
-        const val LIMIT_ELEMENTS: Int = 20
+        const val LIMIT_ELEMENTS: Int = 50
     }
 
     private var page = 0
+    private val db: CryptoDao = CryptoDatabase.getInstance(application).cryptoDao()
     private val isInfoCoinsLoading = MutableLiveData(false)
     private val errorGetDataApi = MutableLiveData(false)
     private val isNetworkAvailable = MutableLiveData(false)
@@ -85,12 +86,11 @@ class CoinsViewModel(
                 successResult
                     .cryptos?.let { newList ->
                         insertDataDb(newList)
-
                         page++
                     }
             }, {
                 errorGetDataApi.postValue(true)
-                page = 0
+                Log.d("Main", it.toString())
             }
 
             )

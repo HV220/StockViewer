@@ -4,7 +4,7 @@ import androidx.room.Embedded
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-class Raw(
+data class Raw(
     @SerializedName("USD")
     @Embedded(prefix = "coinInfo_")
     val coinInfo: CoinInfo? = null

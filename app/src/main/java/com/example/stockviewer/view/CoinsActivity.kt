@@ -19,6 +19,7 @@ class CoinsActivity : ComponentActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var coinsViewModel: CoinsViewModel
     private lateinit var adapter: CoinAdapter
+    private var isBackPressed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,4 +107,5 @@ class CoinsActivity : ComponentActivity() {
         coinsViewModel.registerNetworkCallback(application)
         super.onResume()
     }
+
 }
