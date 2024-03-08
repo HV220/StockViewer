@@ -42,3 +42,5 @@ Contributions are what make the open-source community such an amazing place to l
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+https://github.com/HV220/StockViewer/assets/96989018/892f43a4-f1f7-4a56-9453-1a0acd6479f7
